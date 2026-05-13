@@ -1,11 +1,6 @@
-# Legacy ignore entries
-/vendor/
+# IDE
 /.idea/
 /.vscode/
-/.env.local
-/.env.local.php
-/.phpunit.result.cache
-/var/
 
 # Python
 __pycache__/
