@@ -1,0 +1,18 @@
+﻿{% extends 'base.html' %}
+{% block title %}{% endblock %}
+{% block body %}
+<section class="hero-card">
+  <p class="eyebrow">Plateforme de gestion</p>
+  <h1>Bienvenue sur la plateforme de gestion des stages</h1>
+  <p class="card-text">
+    Vue Python/Django initiale avec les offres de stage et l'authentification.
+  </p>
+  <div class="grid">
+    <article>
+      <h2>Offres publiÃ©es</h2>
+      <p><strong>{{ offers_count }}</strong></p>
+    </article>
+  </div>
+</section>
+{% endblock %}
+

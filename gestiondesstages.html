@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestion des Stages</title>
+
+    <style>
+      body {
+        font-family: Arial;
+        margin: 0;
+        background: #f5f5f5;
+      }
+
+      /* NAVBAR */
+      nav {
+        background: #007bff;
+        padding: 10px;
+        text-align: center;
+      }
+      nav button {
+        margin: 5px;
+        padding: 10px;
+        border: none;
+        background: white;
+        color: #007bff;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      /* SECTIONS */
+      .section {
+        display: none;
+        padding: 20px;
+      }
+      .active {
+        display: block;
+      }
+
+      /* FORM */
+      .form-container {
+        background: white;
+        max-width: 350px;
+        margin: auto;
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+      }
+
+      /* BUTTON */
+      button {
+        padding: 10px;
+        border: none;
+        background: #007bff;
+        color: white;
+      }
+
+      /* CARD */
+      .card {
+        background: white;
+        margin: 10px auto;
+        padding: 10px;
+        border-radius: 10px;
+        max-width: 400px;
+      }
+
+      .role-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #e7f1ff;
+        color: #004a99;
+        font-weight: bold;
+        font-size: 12px;
+        margin-left: 8px;
+      }
+
+      .dash-actions {
+        text-align: center;
+        margin-top: 12px;
+      }
+
+      .dash-actions button {
+        margin: 6px;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: bold;
+        margin-left: 8px;
+      }
+
+      .status-pending {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .status-accepted {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .status-rejected {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .offer-card {
+        background: white;
+        margin: 12px auto;
+        padding: 15px;
+        border-radius: 8px;
+        max-width: 500px;
+        border-left: 4px solid #007bff;
+      }
+
+      .offer-card button {
+        margin-top: 8px;
+        width: 100%;
+      }
+
+      .apply-btn {
+        background: #28a745;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .action-buttons button {
+        flex: 1;
+        margin: 0;
+        font-size: 12px;
+        padding: 6px;
+      }
+
+      .accept-btn {
+        background: #28a745;
+      }
+
+      .reject-btn {
+        background: #dc3545;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 600px) {
+        nav button {
+          width: 90%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- NAVBAR -->
+    <nav>
+      <button onclick="show('home')">Accueil</button>
+      <button onclick="show('login')">Login</button>
+      <button onclick="show('register')">Register</button>
+      <button onclick="show('dashboard')">Dashboard</button>
+    </nav>
+
+    <!-- HOME -->
+    <div id="home" class="section active">
+      <h1 style="text-align: center">Plateforme de Gestion des Stages</h1>
+      <p
+        style="
+          max-width: 900px;
+          margin: 0 auto;
+          text-align: center;
+          line-height: 1.6;
+        "
+      >
+        Cette page présente une base de cahier des charges pour le projet de
+        gestion des stages de l'EMSI, avec le contexte, les acteurs, les
+        besoins, les exigences, les scénarios d'utilisation et le planning.
+      </p>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="login" class="section">
+      <div class="form-container">
+        <h2>Connexion</h2>
+        <form id="loginForm">
+          <input type="email" id="loginEmail" placeholder="Email" required />
+          <input
+            type="password"
+            id="loginPass"
+            placeholder="Mot de passe"
+            required
+          />
+          <button>Login</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="register" class="section">
+      <div class="form-container">
+        <h2>Inscription</h2>
+        <form id="registerForm">
+          <input type="text" id="nom" placeholder="Nom" required />
+          <input type="email" id="email" placeholder="Email" required />
+          <select id="role" required>
+            <option value="">Choisir un role</option>
+            <option value="etudiant">Etudiant</option>
+            <option value="encadrant">Encadrant</option>
+            <option value="representant">Representant service stage</option>
+            <option value="admin">Administrateur</option>
+          </select>
+          <input
+            type="password"
+            id="password"
+            placeholder="Mot de passe"
+            required
+          />
+          <button>Créer compte</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="section">
+      <h2 style="text-align: center">Dashboard</h2>
+      <p id="dashboardIntro" style="text-align: center"></p>
+      <div id="defaultDashActions" style="text-align: center">
+        <button onclick="show('addStage')">➕ Ajouter Stage</button>
+        <button onclick="show('listStage')">📋 Voir Stages</button>
+      </div>
+      <div id="roleActions" class="dash-actions"></div>
+      <div style="text-align: center; margin-top: 10px">
+        <button onclick="logout()">Deconnexion</button>
+      </div>
+    </div>
+
+    <!-- ADD STAGE -->
+    <div id="addStage" class="section">
+      <div class="form-container">
+        <h2>Ajouter Stage</h2>
+        <form id="stageForm">
+          <input type="text" id="titre" placeholder="Titre" required />
+          <textarea id="description" placeholder="Description"></textarea>
+          <input
+            type="text"
+            id="representantServiceStage"
+            placeholder="Représentant du service de stage"
+            required
+          />
+          <button>Ajouter</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- LIST STAGES -->
+    <div id="listStage" class="section">
+      <h2>Liste des stages</h2>
+      <input type="text" id="search" placeholder="Rechercher..." />
+      <div id="stageList"></div>
+    </div>
+
+    <!-- CONSULTER OFFRES (Etudiant) -->
+    <div id="consulterOffres" class="section">
+      <h2>Offres de stage disponibles</h2>
+      <div id="offresList"></div>
+    </div>
+
+    <!-- MES CANDIDATURES (Etudiant) -->
+    <div id="mesCandidatures" class="section">
+      <h2>Mes candidatures</h2>
+      <div id="candidaturesList"></div>
+    </div>
+
+    <!-- GERER CANDIDATURES (Representant) -->
+    <div id="gererCandidatures" class="section">
+      <h2>Gestion des candidatures</h2>
+      <div id="allCandidaturesList"></div>
+    </div>
+
+    <script>
+      // Navigation
+      function show(id) {
+        if (
+          id !== "home" &&
+          id !== "cdc" &&
+          id !== "login" &&
+          id !== "register"
+        ) {
+          if (!getCurrentUser()) {
+            alert("Veuillez vous connecter.");
+            id = "login";
+          }
+        }
+
+        if (id === "addStage") {
+          const user = getCurrentUser();
+          if (
+            !user ||
+            (user.role !== "representant" && user.role !== "admin")
+          ) {
+            alert(
+              "Acces reserve au representant service stage et administrateur.",
+            );
+            id = "dashboard";
+          }
+        }
+
+        document
+          .querySelectorAll(".section")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+
+        if (id === "dashboard") {
+          renderDashboard();
+        } else if (id === "consulterOffres") {
+          afficherOffres();
+        } else if (id === "mesCandidatures") {
+          afficherMesCandidatures();
+        } else if (id === "gererCandidatures") {
+          afficherGererCandidatures();
+        }
+      }
+
+      function getCurrentUser() {
+        return JSON.parse(localStorage.getItem("currentUser") || "null");
+      }
+
+      // Données (simulation)
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      let stages = JSON.parse(localStorage.getItem("stages")) || [];
+      let candidatures = JSON.parse(localStorage.getItem("candidatures")) || [];
+
+      // Register
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          if (users.some((u) => u.email === email.value)) {
+            alert("Un compte avec cet email existe deja.");
+            return;
+          }
+
+          users.push({
+            nom: nom.value,
+            email: email.value,
+            password: password.value,
+            role: role.value,
+          });
+          localStorage.setItem("users", JSON.stringify(users));
+          alert("Compte créé !");
+          registerForm.reset();
+          show("login");
+        });
+
+      // Login
+      document.getElementById("loginForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        let user = users.find(
+          (u) => u.email === loginEmail.value && u.password === loginPass.value,
+        );
+        if (user) {
+          localStorage.setItem("currentUser", JSON.stringify(user));
+          alert("Connexion réussie");
+          loginForm.reset();
+          show("dashboard");
+        } else {
+          alert("Erreur");
+        }
+      });
+
+      function renderDashboard() {
+        const currentUser = getCurrentUser();
+        if (!currentUser) {
+          return;
+        }
+
+        const intro = document.getElementById("dashboardIntro");
+        intro.innerHTML = `Bienvenue ${currentUser.nom} <span class="role-badge">${currentUser.role}</span>`;
+
+        const roleActions = document.getElementById("roleActions");
+        roleActions.innerHTML = "";
+
+        const actionsByRole = {
+          etudiant: [
+            { label: "Consulter offres", action: "consulterOffres" },
+            { label: "Mes candidatures", action: "mesCandidatures" },
+            { label: "Deposer rapport", action: "deposerRapport" },
+            { label: "Voir soutenance", action: "voirSoutenance" },
+          ],
+          encadrant: [
+            { label: "Voir etudiants affectes", action: "voirEtudiants" },
+            { label: "Evaluer avancement", action: "evaluerAvancement" },
+            { label: "Valider rapports", action: "validerRapports" },
+          ],
+          representant: [
+            { label: "Publier offres", action: "addStage" },
+            { label: "Traiter candidatures", action: "gererCandidatures" },
+            { label: "Assigner encadrants", action: "assignerEncadrants" },
+          ],
+          admin: [
+            { label: "Gerer utilisateurs", action: "gererUtilisateurs" },
+            { label: "Configurer roles", action: "configurerRoles" },
+            { label: "Exporter donnees", action: "exporterDonnees" },
+          ],
+        };
+
+        (actionsByRole[currentUser.role] || []).forEach((item) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = item.label;
+          btn.onclick = () => show(item.action);
+          roleActions.appendChild(btn);
+        });
+
+        const defaultActions = document.getElementById("defaultDashActions");
+        const canManageOffers =
+          currentUser.role === "representant" || currentUser.role === "admin";
+        defaultActions.style.display = canManageOffers ? "block" : "none";
+      }
+
+      function logout() {
+        localStorage.removeItem("currentUser");
+        alert("Vous etes deconnecte.");
+        show("login");
+      }
+
+      // Ajouter stage
+      document.getElementById("stageForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const currentUser = getCurrentUser();
+        if (
+          !currentUser ||
+          (currentUser.role !== "representant" && currentUser.role !== "admin")
+        ) {
+          alert("Acces non autorise.");
+          return;
+        }
+
+        let stage = {
+          id: Date.now(),
+          titre: titre.value,
+          description: description.value,
+          representantServiceStage: representantServiceStage.value,
+          createdBy: currentUser.email,
+        };
+        stages.push(stage);
+        localStorage.setItem("stages", JSON.stringify(stages));
+        afficherStages();
+        alert("Offre de stage ajoutee avec succes");
+        stageForm.reset();
+      });
+
+      // Affichage
+      function afficherStages() {
+        let container = document.getElementById("stageList");
+        container.innerHTML = "";
+        stages.forEach((s) => {
+          container.innerHTML += `
+            <div class="card">
+                <h3>${s.titre}</h3>
+                <p>${s.description}</p>
+                <b>${s.representantServiceStage}</b><br />
+                <small>Ajoute par: ${s.createdBy || "inconnu"}</small>
+            </div>
+        `;
+        });
+      }
+
+      // Affichage offres pour etudiants
+      function afficherOffres() {
+        const currentUser = getCurrentUser();
+        let container = document.getElementById("offresList");
+        container.innerHTML = "";
+
+        if (!stages.length) {
+          container.innerHTML =
+            "<p style='text-align: center;'>Aucune offre disponible.</p>";
+          return;
+        }
+
+        stages.forEach((s) => {
+          const hasCandidature = candidatures.some(
+            (c) => c.stageId === s.id && c.studentEmail === currentUser.email,
+          );
+          const candidature = candidatures.find(
+            (c) => c.stageId === s.id && c.studentEmail === currentUser.email,
+          );
+
+          let candidatureStatus = "";
+          if (hasCandidature) {
+            const statusLabel =
+              candidature.statut === "pending"
+                ? "En attente"
+                : candidature.statut === "accepted"
+                  ? "Acceptee"
+                  : "Refusee";
+            candidatureStatus = `<span class="status-badge status-${candidature.statut}">${statusLabel}</span>`;
+          }
+
+          container.innerHTML += `
+            <div class="offer-card">
+                <h3>${s.titre}</h3>
+                <p>${s.description}</p>
+                <small><b>Representant:</b> ${s.representantServiceStage}</small>
+                ${candidatureStatus}
+                ${!hasCandidature ? `<button class="apply-btn" onclick="postuler(${s.id}, '${s.titre.replace(/'/g, "\\'")}')">Postuler</button>` : "<p style='color: gray;'>Vous avez deja postule a cette offre.</p>"}
+            </div>
+          `;
+        });
+      }
+
+      // Postuler a une offre
+      function postuler(stageId, stageTitre) {
+        const currentUser = getCurrentUser();
+        if (!currentUser || currentUser.role !== "etudiant") {
+          alert("Seuls les etudiants peuvent postuler.");
+          return;
+        }
+
+        const hasCandidature = candidatures.some(
+          (c) => c.stageId === stageId && c.studentEmail === currentUser.email,
+        );
+
+        if (hasCandidature) {
+          alert("Vous avez deja postule a cette offre.");
+          return;
+        }
+
+        candidatures.push({
+          id: Date.now(),
+          stageId: stageId,
+          stageTitre: stageTitre,
+          studentEmail: currentUser.email,
+          studentName: currentUser.nom,
+          statut: "pending",
+          dateCandidature: new Date().toLocaleDateString(),
+        });
+
+        localStorage.setItem("candidatures", JSON.stringify(candidatures));
+        alert("Candidature envoyee avec succes!");
+        afficherOffres();
+      }
+
+      // Affichage candidatures etudiant
+      function afficherMesCandidatures() {
+        const currentUser = getCurrentUser();
+        let container = document.getElementById("candidaturesList");
+        container.innerHTML = "";
+
+        const mesCand = candidatures.filter(
+          (c) => c.studentEmail === currentUser.email,
+        );
+
+        if (!mesCand.length) {
+          container.innerHTML =
+            "<p style='text-align: center;'>Aucune candidature pour le moment.</p>";
+          return;
+        }
+
+        mesCand.forEach((c) => {
+          const statusLabel =
+            c.statut === "pending"
+              ? "En attente"
+              : c.statut === "accepted"
+                ? "Acceptee"
+                : "Refusee";
+          container.innerHTML += `
+            <div class="card">
+                <h3>${c.stageTitre}</h3>
+                <p>Date: ${c.dateCandidature}</p>
+                <p>Statut: <span class="status-badge status-${c.statut}">${statusLabel}</span></p>
+            </div>
+          `;
+        });
+      }
+
+      // Affichage gestion candidatures (Representant)
+      function afficherGererCandidatures() {
+        const currentUser = getCurrentUser();
+        let container = document.getElementById("allCandidaturesList");
+        container.innerHTML = "";
+
+        if (!candidatures.length) {
+          container.innerHTML =
+            "<p style='text-align: center;'>Aucune candidature.</p>";
+          return;
+        }
+
+        candidatures.forEach((c) => {
+          const statusLabel =
+            c.statut === "pending"
+              ? "En attente"
+              : c.statut === "accepted"
+                ? "Acceptee"
+                : "Refusee";
+          const isPending = c.statut === "pending";
+
+          container.innerHTML += `
+            <div class="card">
+                <h3>${c.stageTitre}</h3>
+                <p><b>Etudiant:</b> ${c.studentName} (${c.studentEmail})</p>
+                <p><b>Date:</b> ${c.dateCandidature}</p>
+                <p><b>Statut:</b> <span class="status-badge status-${c.statut}">${statusLabel}</span></p>
+                ${
+                  isPending
+                    ? `<div class="action-buttons">
+                  <button class="accept-btn" onclick="validerCandidature(${c.id})">Accepter</button>
+                  <button class="reject-btn" onclick="refuserCandidature(${c.id})">Refuser</button>
+                </div>`
+                    : ""
+                }
+            </div>
+          `;
+        });
+      }
+
+      // Valider candidature
+      function validerCandidature(candidatureId) {
+        const cand = candidatures.find((c) => c.id === candidatureId);
+        if (cand) {
+          cand.statut = "accepted";
+          localStorage.setItem("candidatures", JSON.stringify(candidatures));
+          alert("Candidature de " + cand.studentName + " acceptee!");
+          afficherGererCandidatures();
+        }
+      }
+
+      // Refuser candidature
+      function refuserCandidature(candidatureId) {
+        const cand = candidatures.find((c) => c.id === candidatureId);
+        if (cand) {
+          cand.statut = "rejected";
+          localStorage.setItem("candidatures", JSON.stringify(candidatures));
+          alert("Candidature de " + cand.studentName + " refusee.");
+          afficherGererCandidatures();
+        }
+      }
+
+      // Recherche
+      document.getElementById("search").addEventListener("keyup", function () {
+        let val = this.value.toLowerCase();
+        document.querySelectorAll(".card").forEach((c) => {
+          c.style.display = c.innerText.toLowerCase().includes(val)
+            ? "block"
+            : "none";
+        });
+      });
+
+      // Initialiser la liste si l'utilisateur ouvre directement la section.
+      afficherStages();
+    </script>
+  </body>
+</html>

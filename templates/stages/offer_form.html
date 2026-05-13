@@ -1,0 +1,35 @@
+﻿{% extends 'base.html' %} {% block title %}{% if title %}{{ title }}{% else
+%}Formulaire{% endif %} - Gestion des Stages{% endblock %} {% block body %}
+<section class="content-grid">
+  <form method="post" enctype="multipart/form-data" class="form">
+    {% csrf_token %}
+    <h1>{% if title %}{{ title }}{% else %}Formulaire{% endif %}</h1>
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      {% for error in form.non_field_errors %}
+      <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+    {% endif %} {% for field in form %}
+    <div class="form-group">
+      {{ field.label_tag }} {% if field.help_text %}
+      <small>{{ field.help_text|safe }}</small>
+      {% endif %} {{ field }} {% if field.errors %}
+      <div class="error-messages">
+        {% for error in field.errors %}
+        <p class="error">{{ error }}</p>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <button type="submit" class="button primary">Enregistrer</button>
+      <a href="javascript:history.back()" class="button">Annuler</a>
+    </div>
+  </form>
+</section>
+{% endblock %}
+

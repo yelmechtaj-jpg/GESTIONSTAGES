@@ -1,0 +1,56 @@
+﻿{% extends 'base.html' %}
+{% block title %}{% endblock %}
+{% block body %}
+<section class="hero-card">
+  <h1>Documents</h1>
+  <p class="card-text">GÃ©rez les documents relatifs Ã  vos candidatures.</p>
+  {% if user.role == 'etudiant' %}
+  <a href="{% url 'document_upload' %}" class="button primary"
+    >+ TÃ©lÃ©charger un document</a
+  >
+  {% endif %}
+</section>
+
+<section class="content-grid">
+  {% if documents %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Fichier</th>
+        <th>Ã‰tudiant</th>
+        <th>Statut</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for doc in documents %}
+      <tr>
+        <td>{{ doc.original_name }}</td>
+        <td>{{ doc.student.full_name }}</td>
+        <td>
+          <span class="badge badge-{{ doc.status }}"
+            >{{ doc.get_status_display }}</span
+          >
+        </td>
+        <td>{{ doc.uploaded_at|date:'d/m/Y' }}</td>
+        <td>
+          <a href="{% url 'document_download' doc.pk %}" class="button small"
+            >TÃ©lÃ©charger</a
+          >
+          {% if user.role == 'encadrant' %}
+          <a href="{% url 'document_review' doc.pk %}" class="button small"
+            >Ã‰valuer</a
+          >
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>Aucun document.</p>
+  {% endif %}
+</section>
+{% endblock %}
+

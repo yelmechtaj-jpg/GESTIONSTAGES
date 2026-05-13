@@ -1,0 +1,56 @@
+﻿{% extends 'base.html' %}
+{% block title %}{% endblock %}
+{% block body %}
+<section class="hero-card">
+  <h1>DÃ©fenses de Stage</h1>
+  <p class="card-text">Consultez et gÃ©rez les dÃ©fenses planifiÃ©es.</p>
+  {% if user.role == 'admin' %}
+  <a href="{% url 'defense_create' %}" class="button primary"
+    >+ Planifier une dÃ©fense</a
+  >
+  {% endif %}
+</section>
+
+<section class="content-grid">
+  {% if defenses %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Ã‰tudiant</th>
+        <th>Date</th>
+        <th>Salle</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for defense in defenses %}
+      <tr>
+        <td>{{ defense.student.full_name }}</td>
+        <td>{{ defense.scheduled_at|date:'d/m/Y H:i' }}</td>
+        <td>{{ defense.room }}</td>
+        <td>
+          <span class="badge badge-{{ defense.status }}"
+            >{{ defense.get_status_display }}</span
+          >
+        </td>
+        <td>
+          <a href="{% url 'defense_detail' defense.pk %}" class="button small"
+            >Voir</a
+          >
+          {% if user.role == 'admin' %}
+          <a href="{% url 'defense_update' defense.pk %}" class="button small"
+            >Modifier</a
+          >
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>Aucune dÃ©fense planifiÃ©e.</p>
+  {% endif %}
+</section>
+{% endblock %}
+

@@ -1,0 +1,22 @@
+﻿{% extends 'base.html' %}
+{% block title %}{% endblock %}
+{% block body %}
+<section class="auth-card">
+  <h1>Connexion</h1>
+  {% if error %}
+  <div class="alert-danger">{{ error }}</div>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" required />
+    <label for="password">Mot de passe</label>
+    <input id="password" type="password" name="password" required />
+    <button class="button primary" type="submit">Connexion</button>
+  </form>
+  <p class="card-meta">
+    <a href="{% url 'forgot_password' %}" class="link">Mot de passe oubliÃ© ?</a>
+  </p>
+</section>
+{% endblock %}
+

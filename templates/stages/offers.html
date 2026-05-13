@@ -1,0 +1,20 @@
+﻿{% extends 'base.html' %}
+{% block title %}{% endblock %}
+{% block body %}
+<section>
+  <p class="eyebrow">Offres de stage</p>
+  <h1>Offres disponibles</h1>
+  <div class="grid">
+    {% for offer in offers %}
+    <article>
+      <h2>{{ offer.title }}</h2>
+      <p>{{ offer.description|truncatechars:150 }}</p>
+      <span class="badge">{{ offer.get_status_display }}</span>
+    </article>
+    {% empty %}
+    <div class="card">Aucune offre disponible.</div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+

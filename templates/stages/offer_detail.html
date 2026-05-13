@@ -1,0 +1,38 @@
+﻿{% extends 'base.html' %} {% block title %}{{ offer.title }} - Gestion des
+Stages{% endblock %} {% block body %}
+<article class="card">
+  <h1>{{ offer.title }}</h1>
+  <p class="meta">
+    Statut: <span class="badge">{{ offer.get_status_display }}</span>
+  </p>
+
+  <section class="card-content">
+    <h2>Description</h2>
+    <p>{{ offer.description }}</p>
+
+    <p class="meta">CrÃ©Ã©e le {{ offer.created_at|date:'d/m/Y Ã  H:i' }}</p>
+    <p><strong>{{ applications_count }}</strong> candidature(s)</p>
+  </section>
+
+  <div class="button-group">
+    {% if can_apply %}
+    <form
+      method="post"
+      action="{% url 'application_create' offer.pk %}"
+      style="display: inline"
+    >
+      {% csrf_token %}
+      <button type="submit" class="button primary">Postuler</button>
+    </form>
+    {% elif user.is_authenticated and user.role == 'etudiant' %}
+    <p class="info">Vous avez dÃ©jÃ  postulÃ© Ã  cette offre.</p>
+    {% endif %} {% if user.role == 'admin' %}
+    <a href="{% url 'offer_update' offer.pk %}" class="button">Modifier</a>
+    <a href="{% url 'offer_delete' offer.pk %}" class="button danger"
+      >Supprimer</a
+    >
+    {% endif %}
+  </div>
+</article>
+{% endblock %}
+

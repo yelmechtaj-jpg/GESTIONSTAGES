@@ -1,0 +1,51 @@
+﻿{% extends 'base.html' %}
+{% block title %}{% endblock %}
+{% block body %}
+<section class="hero-card">
+  <h1>Candidatures</h1>
+  <p class="card-text">GÃ©rez vos candidatures aux offres de stage.</p>
+</section>
+
+<section class="content-grid">
+  {% if applications %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Offre</th>
+        <th>Statut</th>
+        <th>Date de candidature</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for app in applications %}
+      <tr>
+        <td>{{ app.offer.title }}</td>
+        <td>
+          <span class="badge badge-{{ app.status }}"
+            >{{ app.get_status_display }}</span
+          >
+        </td>
+        <td>{{ app.applied_at|date:'d/m/Y' }}</td>
+        <td>
+          <a href="{% url 'application_detail' app.pk %}" class="button small"
+            >Voir</a
+          >
+          {% if user.role == 'representant' %}
+          <a
+            href="{% url 'application_update_status' app.pk %}"
+            class="button small"
+            >Modifier</a
+          >
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>Aucune candidature.</p>
+  {% endif %}
+</section>
+{% endblock %}
+

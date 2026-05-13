@@ -1,0 +1,34 @@
+﻿{% extends 'base.html' %} {% block title %}Offres de Stage - Gestion des
+Stages{% endblock %} {% block body %}
+<section class="hero-card">
+  <p class="eyebrow">Offres de Stage</p>
+  <h1>Offres disponibles</h1>
+  <p class="card-text">
+    Parcourez les offres de stage proposÃ©es par nos partenaires.
+  </p>
+  {% if user.role == 'admin' %}
+  <a href="{% url 'offer_create' %}" class="button primary"
+    >+ CrÃ©er une offre</a
+  >
+  {% endif %}
+</section>
+
+<section class="content-grid">
+  <div class="grid">
+    {% for offer in offers %}
+    <article class="card">
+      <div class="card-header">
+        <h2>{{ offer.title }}</h2>
+        <span class="badge">{{ offer.get_status_display }}</span>
+      </div>
+      <p>{{ offer.description|truncatewords:30 }}</p>
+      <p class="card-meta">CrÃ©Ã©e le {{ offer.created_at|date:'d/m/Y' }}</p>
+      <a href="{% url 'offer_detail' offer.pk %}" class="button">DÃ©tails</a>
+    </article>
+    {% empty %}
+    <p>Aucune offre disponible.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+

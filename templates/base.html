@@ -1,0 +1,59 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Gestion des Stages{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">Gestion des Stages</div>
+      <nav class="nav">
+        <a href="{% url 'dashboard' %}">Accueil</a>
+        <a href="{% url 'offer_list' %}">Offres</a>
+
+        {% if user.is_authenticated %}
+        <a href="{% url 'application_list' %}">Candidatures</a>
+        <a href="{% url 'document_list' %}">Documents</a>
+        <a href="{% url 'defense_list' %}">Défenses</a>
+
+        {% if user.role == 'admin' %}
+        <a href="{% url 'offer_create' %}">+ Offre</a>
+        <a href="{% url 'defense_create' %}">+ Défense</a>
+        <a href="/admin/">Admin</a>
+        {% elif user.role == 'representant' %}
+        <a href="/admin/">Gestion</a>
+        {% endif %}
+
+        <span class="user-info"
+          >{{ user.full_name }} ({{ user.get_role_display }})</span
+        >
+        <a href="{% url 'logout' %}">Déconnexion</a>
+        {% else %}
+        <a href="{% url 'login' %}">Connexion</a>
+        {% endif %}
+      </nav>
+    </header>
+
+    {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+        <button
+          type="button"
+          class="close"
+          onclick="this.parentElement.style.display = 'none'"
+        >
+          &times;
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="page-shell">{% block body %}{% endblock %}</main>
+  </body>
+</html>
